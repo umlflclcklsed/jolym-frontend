@@ -264,7 +264,7 @@ export default function RoadmapGraph({ onNodeClick, completedNodes }: RoadmapGra
   }, [completedNodes, updateNodesCompletion])
 
   const handleNodeClick = useCallback(
-    (_, node) => {
+    (_: React.MouseEvent, node: { data: any }) => {
       onNodeClick(node.data)
     },
     [onNodeClick],
