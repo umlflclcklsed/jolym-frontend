@@ -1,17 +1,15 @@
 import type React from "react"
-import { Poppins } from "next/font/google"
+import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
 import Navbar from "@/components/navbar"
+import { AuthProvider } from "@/context/auth-context"
 
-const poppins = Poppins({
-  weight: ["300", "400", "500", "600", "700"],
-  subsets: ["latin"],
-})
+const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
-  title: "Jolym - Your Career. Visualized.",
-  description: "Type your dream job. We'll show you how to get there.",
+  title: "Jolym - Map Your Future, One Step at a Time",
+  description: "Generate personalized career roadmaps with AI",
 }
 
 export default function RootLayout({
@@ -21,10 +19,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${poppins.className} min-h-screen flex flex-col`}>
+      <body className={`${inter.className} min-h-screen flex flex-col`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-          <Navbar />
-          <main className="flex-1">{children}</main>
+          <AuthProvider>
+            <Navbar />
+            <main className="flex-1">{children}</main>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
