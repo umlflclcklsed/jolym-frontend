@@ -6,17 +6,17 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Download, Share2, Clock, Filter, RefreshCw, CheckCircle2 } from "lucide-react"
-import RoadmapGraph from "@/components/roadmap-graph"
 import { motion } from "framer-motion"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { BookOpen } from "lucide-react"
 import { CalendarIcon } from "@radix-ui/react-icons"
+import VerticalRoadmap from "@/components/vertical-roadmap"
 
 export default function RoadmapPage() {
   const searchParams = useSearchParams()
-  const [career, setCareer] = useState("AI Researcher")
-  const [selectedNode, setSelectedNode] = useState<RoadmapNode | null>(null)
+  const [career, setCareer] = useState("Backend Developer")
+  const [selectedNode, setSelectedNode] = useState<any | null>(null)
   const [progress, setProgress] = useState(0)
   const [completedNodes, setCompletedNodes] = useState<string[]>([])
   const [currentDate] = useState(
@@ -34,7 +34,7 @@ export default function RoadmapPage() {
     }
   }, [searchParams])
 
-  const handleNodeClick = (node: RoadmapNode) => {
+  const handleNodeClick = (node: any) => {
     setSelectedNode(node)
   }
 
@@ -55,7 +55,8 @@ export default function RoadmapPage() {
     }
 
     setCompletedNodes(newCompletedNodes)
-    setProgress(Math.round((newCompletedNodes.length / 5) * 100))
+    // Calculate progress based on total number of nodes (12 in our roadmap)
+    setProgress(Math.round((newCompletedNodes.length / 12) * 100))
     setSelectedNode(null)
   }
 
@@ -87,7 +88,7 @@ export default function RoadmapPage() {
               <Clock className="h-4 w-4 text-[#66BB6A]" />
               <span>~1-2 years</span>
             </div>
-            <Badge className="bg-[#E8F5E9] text-[#2E7D32] hover:bg-[#C8E6C9]">6 stages</Badge>
+            <Badge className="bg-[#E8F5E9] text-[#2E7D32] hover:bg-[#C8E6C9]">4 sections</Badge>
           </div>
         </div>
         <div className="flex gap-3">
@@ -114,10 +115,8 @@ export default function RoadmapPage() {
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           <Card className="border-[#A5D6A7] shadow-md rounded-xl overflow-hidden">
-            <CardContent className="p-0">
-              <div className="h-[600px] w-full bg-white">
-                <RoadmapGraph onNodeClick={handleNodeClick} completedNodes={completedNodes} />
-              </div>
+            <CardContent className="p-6">
+              <VerticalRoadmap onStepClick={handleNodeClick} completedSteps={completedNodes} />
             </CardContent>
           </Card>
         </motion.div>
@@ -132,7 +131,7 @@ export default function RoadmapPage() {
             <CardContent className="p-6 space-y-4">
               <div>
                 <h3 className="text-lg font-semibold text-[#1B5E20] mb-2">Your Progress</h3>
-                <Progress value={progress} className="h-2 bg-[#E8F5E9]" indicatorClassName="bg-[#2E7D32]" />
+                <Progress value={progress} className="h-2 bg-[#E8F5E9]" />
                 <p className="text-sm text-gray-600 mt-2">{progress}% completed</p>
               </div>
 
@@ -173,7 +172,7 @@ export default function RoadmapPage() {
                   <div className="rounded-full bg-[#E8F5E9] p-1 mt-0.5 flex-shrink-0">
                     <div className="h-1.5 w-1.5 rounded-full bg-[#2E7D32]"></div>
                   </div>
-                  <span>Click on any node to see detailed information and resources</span>
+                  <span>Click on any step to see detailed information and resources</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <div className="rounded-full bg-[#E8F5E9] p-1 mt-0.5 flex-shrink-0">
@@ -185,7 +184,7 @@ export default function RoadmapPage() {
                   <div className="rounded-full bg-[#E8F5E9] p-1 mt-0.5 flex-shrink-0">
                     <div className="h-1.5 w-1.5 rounded-full bg-[#2E7D32]"></div>
                   </div>
-                  <span>Export your roadmap to PDF or share it with others</span>
+                  <span>Use the section navigation bar to quickly jump between sections</span>
                 </li>
               </ul>
             </CardContent>
@@ -210,7 +209,7 @@ export default function RoadmapPage() {
                   Recommended Resources
                 </h4>
                 <ul className="space-y-4">
-                  {selectedNode.resources.map((resource, index) => (
+                  {selectedNode.resources.map((resource: any, index: number) => (
                     <li key={index} className="flex items-start gap-3 bg-[#F9FDF9] p-3 rounded-lg">
                       <div className="rounded-full bg-[#E8F5E9] p-1.5 mt-0.5">
                         <div className="h-2 w-2 rounded-full bg-[#2E7D32]"></div>
@@ -225,11 +224,22 @@ export default function RoadmapPage() {
                           {resource.title}
                         </a>
                         <p className="text-sm text-gray-600">{resource.source}</p>
+                        {resource.description && <p className="text-xs text-gray-500 mt-1">{resource.description}</p>}
                       </div>
                     </li>
                   ))}
                 </ul>
               </div>
+
+              {selectedNode.tips && (
+                <div className="space-y-2">
+                  <h4 className="text-sm font-medium text-[#2E7D32] flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4" />
+                    Tips
+                  </h4>
+                  <p className="text-sm text-gray-600 bg-[#F9FDF9] p-3 rounded-lg">{selectedNode.tips}</p>
+                </div>
+              )}
 
               <div className="pt-2 flex justify-end">
                 <Button
