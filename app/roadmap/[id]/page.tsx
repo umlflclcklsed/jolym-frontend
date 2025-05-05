@@ -53,6 +53,7 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { dashboardAPI } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
+import MapRoadmap from "@/components/map-roadmap"
 
 export default function RoadmapPage() {
   const params = useParams()
@@ -64,6 +65,7 @@ export default function RoadmapPage() {
   const [selectedStep, setSelectedStep] = useState<any>(null)
   const [showDetails, setShowDetails] = useState(true)
   const [updatingProgress, setUpdatingProgress] = useState(false)
+  const [viewMode, setViewMode] = useState<"list" | "map">("map")
 
   useEffect(() => {
     const fetchRoadmap = async () => {
@@ -244,37 +246,86 @@ export default function RoadmapPage() {
           </div>
         </Card>
 
-        {/* Roadmap Steps */}
-        <Card className="border-emerald-100 shadow-md bg-white/80 backdrop-blur-sm">
-          <div className="p-6">
-            <div className="space-y-8">
-              {roadmap.steps.map((step, index) => (
-                <div
-                  key={step.id}
-                  className={`
-                    relative flex items-center gap-4 p-4 rounded-lg border 
-                    ${step.progress?.completed ? "border-emerald-300 bg-emerald-50" : "border-emerald-100 bg-white"} 
-                    shadow-sm hover:shadow-md transition-all cursor-pointer
-                  `}
-                  onClick={() => handleStepClick(step)}
-                >
-                  <div className={`p-3 rounded-lg ${step.icon_bg}`}>
-                    <DynamicIcon iconName={step.icon} className={`h-5 w-5 ${step.icon_color}`} />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-medium text-emerald-900">{step.title}</h3>
-                    <p className="text-sm text-gray-500 line-clamp-2">{step.description}</p>
-                  </div>
-                  {step.progress?.completed && (
-                    <Badge variant="outline" className="bg-emerald-100 text-emerald-800 border-emerald-200">
-                      Completed
-                    </Badge>
-                  )}
-                </div>
-              ))}
-            </div>
+        {/* Roadmap Map View */}
+        <div className="mb-8">
+          <div className="flex justify-end mb-4">
+            <Button
+              variant="outline"
+              className="gap-2 border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700 dark:border-emerald-800 dark:hover:bg-emerald-900/30 dark:hover:text-emerald-400"
+              onClick={() => setViewMode(viewMode === "map" ? "list" : "map")}
+            >
+              {viewMode === "map" ? "Switch to List View" : "Switch to Map View"}
+            </Button>
           </div>
-        </Card>
+
+          {viewMode === "map" ? (
+            <MapRoadmap
+              roadmapData={{
+                title: roadmap.name,
+                description: roadmap.description,
+                estimatedHours: 0,
+                difficulty: 0,
+                prerequisites: [],
+                careerLevel: "",
+                sections: [
+                  {
+                    id: "main-section",
+                    title: roadmap.name,
+                    description: roadmap.description,
+                    nodes: roadmap.steps.map((step) => ({
+                      ...step,
+                      id: step.id,
+                      title: step.title,
+                      description: step.description,
+                      icon: step.icon || "Code",
+                      iconColor: step.icon_color || "text-emerald-600",
+                      iconBg: step.icon_bg || "bg-emerald-100",
+                      timeToComplete: step.time_to_complete || "",
+                      difficulty: step.difficulty || 3,
+                      resources: step.resources || [],
+                      tips: step.tips || "",
+                    })),
+                  },
+                ],
+              }}
+              onNodeClick={handleStepClick}
+            />
+          ) : (
+            <Card className="border-emerald-100 shadow-md bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
+              <div className="p-6">
+                <div className="space-y-8">
+                  {roadmap.steps.map((step, index) => (
+                    <div
+                      key={step.id}
+                      className={`
+                        relative flex items-center gap-4 p-4 rounded-lg border 
+                        ${step.progress?.completed ? "border-emerald-300 bg-emerald-50 dark:border-emerald-700 dark:bg-emerald-900/30" : "border-emerald-100 bg-white dark:border-gray-800 dark:bg-gray-800/50"} 
+                        shadow-sm hover:shadow-md transition-all cursor-pointer
+                      `}
+                      onClick={() => handleStepClick(step)}
+                    >
+                      <div className={`p-3 rounded-lg ${step.icon_bg}`}>
+                        <DynamicIcon iconName={step.icon} className={`h-5 w-5 ${step.icon_color}`} />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-medium text-emerald-900 dark:text-emerald-100">{step.title}</h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">{step.description}</p>
+                      </div>
+                      {step.progress?.completed && (
+                        <Badge
+                          variant="outline"
+                          className="bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900/50 dark:text-emerald-100 dark:border-emerald-700"
+                        >
+                          Completed
+                        </Badge>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Card>
+          )}
+        </div>
       </div>
 
       {selectedStep && (
