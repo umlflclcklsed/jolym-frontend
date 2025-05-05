@@ -2,22 +2,20 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { roadmapsAPI, goalsAPI, authAPI } from "@/lib/api"
+import { dashboardAPI } from "@/lib/api"
 import DashboardHeader from "@/components/dashboard/dashboard-header"
 import RoadmapCard from "@/components/dashboard/roadmap-card"
-import GoalCard from "@/components/dashboard/goal-card"
 import StatsOverview from "@/components/dashboard/stats-overview"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons"
+import { AlertCircle } from "lucide-react"
 
 export default function DashboardPage() {
   const router = useRouter()
   const [user, setUser] = useState<any>(null)
   const [roadmaps, setRoadmaps] = useState<any[]>([])
-  const [goals, setGoals] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -26,26 +24,22 @@ export default function DashboardPage() {
       try {
         setLoading(true)
 
-        // Fetch current user
-        const userResponse = await authAPI.getCurrentUser()
-        setUser(userResponse.data)
+        // Fetch user dashboard data
+        const dashboardResponse = await dashboardAPI.getUserDashboard()
+        const dashboardData = dashboardResponse.data
 
-        // Fetch user's roadmaps
-        const roadmapsResponse = await roadmapsAPI.getUserRoadmaps()
-        setRoadmaps(roadmapsResponse.data)
-
-        // Fetch user's goals
-        const goalsResponse = await goalsAPI.getUserGoals()
-        setGoals(goalsResponse.data)
+        // Set roadmaps from the dashboard data
+        setRoadmaps(dashboardData.tracked_roadmaps || [])
 
         setError(null)
       } catch (err: any) {
         console.error("Error fetching dashboard data:", err)
-        setError(err.response?.data?.message || "Failed to load dashboard data")
 
-        // If unauthorized, redirect to login
         if (err.response?.status === 401) {
+          // If unauthorized, redirect to login
           router.push("/login")
+        } else {
+          setError(err.response?.data?.detail || "Failed to load dashboard data")
         }
       } finally {
         setLoading(false)
@@ -66,7 +60,7 @@ export default function DashboardPage() {
       <div className="container px-4 py-8 md:px-6">
         {error && (
           <Alert variant="destructive" className="mb-6">
-            <ExclamationTriangleIcon className="h-4 w-4" />
+            <AlertCircle className="h-4 w-4" />
             <AlertTitle>Error</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
           </Alert>
@@ -74,15 +68,14 @@ export default function DashboardPage() {
 
         <StatsOverview
           totalRoadmaps={roadmaps.length}
-          completedRoadmaps={roadmaps.filter((r) => r.progress === 100).length}
-          totalGoals={goals.length}
-          completedGoals={goals.filter((g) => g.completed).length}
+          completedRoadmaps={roadmaps.filter((r) => r.completed_steps === r.total_steps && r.total_steps > 0).length}
+          totalSteps={roadmaps.reduce((acc, r) => acc + r.total_steps, 0)}
+          completedSteps={roadmaps.reduce((acc, r) => acc + r.completed_steps, 0)}
         />
 
         <Tabs defaultValue="roadmaps" className="mt-8">
           <TabsList className="mb-6">
             <TabsTrigger value="roadmaps">My Roadmaps</TabsTrigger>
-            <TabsTrigger value="goals">My Goals</TabsTrigger>
           </TabsList>
 
           <TabsContent value="roadmaps">
@@ -98,23 +91,6 @@ export default function DashboardPage() {
                 description="Create your first career roadmap to get started on your journey."
                 actionLabel="Create Roadmap"
                 actionHref="/roadmap/create"
-              />
-            )}
-          </TabsContent>
-
-          <TabsContent value="goals">
-            {goals.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {goals.map((goal) => (
-                  <GoalCard key={goal.id} goal={goal} />
-                ))}
-              </div>
-            ) : (
-              <EmptyState
-                title="No goals yet"
-                description="Set your first goal to track your progress."
-                actionLabel="Create Goal"
-                actionHref="/goals/create"
               />
             )}
           </TabsContent>

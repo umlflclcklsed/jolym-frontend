@@ -2,7 +2,7 @@ import axios from "axios"
 
 // Create an axios instance with default config
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000",
   headers: {
     "Content-Type": "application/json",
   },
@@ -23,23 +23,38 @@ api.interceptors.request.use(
   (error) => Promise.reject(error),
 )
 
-// API endpoints
+// Auth API
 export const authAPI = {
   login: (email: string, password: string) => api.post("/auth/login", { email, password }),
+
   register: (name: string, email: string, password: string) => api.post("/auth/register", { name, email, password }),
-  getCurrentUser: () => api.get("/auth/me"),
+
+  getCurrentUser: () => api.get("/auth/users/me"),
 }
 
-export const roadmapsAPI = {
-  getUserRoadmaps: () => api.get("/roadmaps"),
-  getRoadmapById: (id: string) => api.get(`/roadmaps/${id}`),
-  createRoadmap: (data: any) => api.post("/roadmaps", data),
+// Roadmap API
+export const roadmapAPI = {
+  createPrompt: (text: string) => api.post("/roadmap/prompt", { text }),
+
+  findSimilarPrompts: (text: string, limit = 5, threshold = 0.7) =>
+    api.get("/roadmap/prompts/similar", { params: { text, limit, threshold } }),
+
+  healthCheck: () => api.get("/roadmap/health"),
 }
 
+// Dashboard API
+export const dashboardAPI = {
+  getUserDashboard: () => api.get("/dashboard/me"),
+
+  getRoadmapDetails: (roadmapId: number) => api.get(`/dashboard/roadmaps/${roadmapId}`),
+
+  updateStepProgress: (roadmapId: number, stepId: string, completed: boolean) =>
+    api.post(`/dashboard/roadmaps/${roadmapId}/progress`, { step_id: stepId, completed }),
+}
+
+// Goals API
 export const goalsAPI = {
-  getUserGoals: () => api.get("/goals"),
-  createGoal: (data: any) => api.post("/goals", data),
-  updateGoalProgress: (id: string, progress: number) => api.patch(`/goals/${id}/progress`, { progress }),
+  updateGoalProgress: (goalId: number, progress: number) => api.post(`/goals/${goalId}/progress`, { progress }),
 }
 
 export default api

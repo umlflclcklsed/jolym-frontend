@@ -4,25 +4,47 @@ import type React from "react"
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { generateRoadmapAction } from "@/app/actions/roadmap-actions"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { ExclamationTriangleIcon, ReloadIcon } from "@radix-ui/react-icons"
+import { AlertCircle, Loader2 } from "lucide-react"
+import { roadmapAPI } from "@/lib/api"
 
 export default function CreateRoadmapPage() {
   const router = useRouter()
-  const [career, setCareer] = useState("")
+  const [prompt, setPrompt] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [similarPrompts, setSimilarPrompts] = useState<any[]>([])
+  const [searchingForSimilar, setSearchingForSimilar] = useState(false)
+
+  const handlePromptChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const text = e.target.value
+    setPrompt(text)
+
+    // If text is long enough, search for similar prompts
+    if (text.length > 10) {
+      try {
+        setSearchingForSimilar(true)
+        const response = await roadmapAPI.findSimilarPrompts(text)
+        setSimilarPrompts(response.data || [])
+      } catch (err) {
+        console.error("Error finding similar prompts:", err)
+      } finally {
+        setSearchingForSimilar(false)
+      }
+    } else {
+      setSimilarPrompts([])
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!career.trim()) {
-      setError("Please enter a career path")
+    if (!prompt.trim()) {
+      setError("Please enter a career path or goal")
       return
     }
 
@@ -30,18 +52,26 @@ export default function CreateRoadmapPage() {
       setLoading(true)
       setError(null)
 
-      // Generate roadmap using Groq
-      const roadmapData = await generateRoadmapAction(career)
+      // Create prompt and generate roadmap
+      const response = await roadmapAPI.createPrompt(prompt)
 
-      // Redirect to the new roadmap
-      // In a real app, you'd save this to the database first and get an ID
-      // For now, we'll just use a mock ID
-      router.push(`/roadmap/new-${Date.now()}`)
+      // If successful and we have a roadmap_id, redirect to it
+      if (response.data && response.data.roadmap_id) {
+        router.push(`/roadmap/${response.data.roadmap_id}`)
+      } else {
+        throw new Error("Failed to generate roadmap")
+      }
     } catch (err: any) {
       console.error("Error generating roadmap:", err)
-      setError(err.message || "Failed to generate roadmap. Please try again.")
+      setError(err.response?.data?.detail || "Failed to generate roadmap. Please try again.")
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleSelectSimilarPrompt = (promptId: number, roadmapId: number | null) => {
+    if (roadmapId) {
+      router.push(`/roadmap/${roadmapId}`)
     }
   }
 
@@ -53,13 +83,13 @@ export default function CreateRoadmapPage() {
             <CardHeader>
               <CardTitle className="text-2xl font-bold text-emerald-900">Create Career Roadmap</CardTitle>
               <CardDescription>
-                Enter your desired career path and we'll generate a personalized roadmap for you.
+                Describe your desired career path or learning goal, and we'll generate a personalized roadmap for you.
               </CardDescription>
             </CardHeader>
             <CardContent>
               {error && (
                 <Alert variant="destructive" className="mb-6">
-                  <ExclamationTriangleIcon className="h-4 w-4" />
+                  <AlertCircle className="h-4 w-4" />
                   <AlertTitle>Error</AlertTitle>
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
@@ -68,21 +98,49 @@ export default function CreateRoadmapPage() {
               <form onSubmit={handleSubmit}>
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="career">Career Path</Label>
+                    <Label htmlFor="prompt">What do you want to learn or become?</Label>
                     <Input
-                      id="career"
-                      placeholder="e.g., UX Designer, Data Scientist, Marketing Manager"
-                      value={career}
-                      onChange={(e) => setCareer(e.target.value)}
+                      id="prompt"
+                      placeholder="e.g., Become a UX Designer, Learn machine learning, Master web development"
+                      value={prompt}
+                      onChange={handlePromptChange}
                       className="border-gray-200 focus:border-emerald-500 focus:ring-emerald-500"
                       disabled={loading}
                     />
                     <p className="text-xs text-gray-500">
-                      Be specific about the career you want to pursue. This helps us generate a more accurate roadmap.
+                      Be specific about your goal. This helps us generate a more accurate roadmap.
                     </p>
                   </div>
                 </div>
               </form>
+
+              {/* Similar prompts */}
+              {similarPrompts.length > 0 && (
+                <div className="mt-6">
+                  <h3 className="text-sm font-medium text-gray-700 mb-2">Similar roadmaps already exist:</h3>
+                  <div className="space-y-2">
+                    {similarPrompts.map((item) => (
+                      <div
+                        key={item.id}
+                        className="p-3 border border-emerald-100 rounded-lg hover:bg-emerald-50 cursor-pointer"
+                        onClick={() => handleSelectSimilarPrompt(item.id, item.roadmap_id)}
+                      >
+                        <p className="font-medium text-emerald-800">{item.text}</p>
+                        {item.roadmap_id && (
+                          <p className="text-xs text-emerald-600 mt-1">Click to view this existing roadmap</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {searchingForSimilar && (
+                <div className="mt-4 flex items-center text-sm text-gray-500">
+                  <Loader2 className="h-3 w-3 animate-spin mr-2" />
+                  Searching for similar roadmaps...
+                </div>
+              )}
             </CardContent>
             <CardFooter className="flex justify-between">
               <Button
@@ -96,7 +154,7 @@ export default function CreateRoadmapPage() {
               <Button onClick={handleSubmit} className="bg-emerald-700 hover:bg-emerald-800" disabled={loading}>
                 {loading ? (
                   <>
-                    <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Generating...
                   </>
                 ) : (
@@ -116,12 +174,18 @@ export default function CreateRoadmapPage() {
                 "Product Manager",
                 "Digital Marketer",
                 "Cloud Architect",
+                "Machine Learning Engineer",
+                "DevOps Engineer",
+                "Blockchain Developer",
+                "Cybersecurity Specialist",
+                "AI Researcher",
+                "Mobile App Developer",
               ].map((suggestion) => (
                 <Button
                   key={suggestion}
                   variant="outline"
                   className="justify-start border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700"
-                  onClick={() => setCareer(suggestion)}
+                  onClick={() => setPrompt(`Become a ${suggestion}`)}
                   disabled={loading}
                 >
                   {suggestion}
