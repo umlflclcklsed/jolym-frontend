@@ -43,7 +43,9 @@ import {
   TrendingUp,
   Smartphone,
   Shield,
-  Truck
+  Truck,
+  Settings,
+  Terminal
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
@@ -52,14 +54,60 @@ import { Skeleton } from "@/components/ui/skeleton"
 import MapRoadmap from "@/components/map-roadmap"
 import { ChevronDownIcon, RocketIcon, GearIcon, ReloadIcon } from "@radix-ui/react-icons"
 
+// Define types for better type safety
+interface Step {
+  id: number;
+  title: string;
+  description: string;
+  icon: string;
+  icon_color: string;
+  icon_bg: string;
+  time_to_complete?: string;
+  difficulty?: number;
+  resources?: Resource[];
+  tips?: string;
+  progress?: {
+    completed: boolean;
+    completed_at: string | null;
+  };
+}
+
+interface Resource {
+  title: string;
+  url: string;
+  source: string;
+  description?: string;
+}
+
+interface Roadmap {
+  id: number;
+  name: string;
+  description: string;
+  steps: Step[];
+}
+
+// Define types to match MapRoadmap component requirements
+interface RoadmapNode {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  iconColor: string;
+  iconBg: string;
+  timeToComplete: string;
+  difficulty: number;
+  resources: Resource[];
+  tips: string;
+}
+
 export default function RoadmapPage() {
   const params = useParams()
   const roadmapId = Number.parseInt(params.id as string)
 
-  const [roadmap, setRoadmap] = useState<any>(null)
+  const [roadmap, setRoadmap] = useState<Roadmap | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [selectedStep, setSelectedStep] = useState<any>(null)
+  const [selectedStep, setSelectedStep] = useState<Step | null>(null)
   const [showDetails, setShowDetails] = useState(true)
   const [updatingProgress, setUpdatingProgress] = useState(false)
   const [viewMode, setViewMode] = useState<"list" | "map">("map")
@@ -84,7 +132,7 @@ export default function RoadmapPage() {
     }
   }, [roadmapId])
 
-  const handleStepClick = (step: any) => {
+  const handleStepClick = (step: Step) => {
     setSelectedStep(step)
   }
 
@@ -92,18 +140,20 @@ export default function RoadmapPage() {
     setSelectedStep(null)
   }
 
-  const handleToggleStepCompletion = async (step: any) => {
+  const handleToggleStepCompletion = async (step: Step) => {
     if (updatingProgress) return
 
     try {
       setUpdatingProgress(true)
       const newCompletionStatus = step.progress ? !step.progress.completed : true
 
-      await dashboardAPI.updateStepProgress(roadmapId, step.id, newCompletionStatus)
+      await dashboardAPI.updateStepProgress(roadmapId, step.id.toString(), newCompletionStatus)
 
       // Update local state
-      setRoadmap((prevRoadmap) => {
-        const updatedSteps = prevRoadmap.steps.map((s) => {
+      setRoadmap((prevRoadmap: Roadmap | null) => {
+        if (!prevRoadmap) return null;
+        
+        const updatedSteps = prevRoadmap.steps.map((s: Step) => {
           if (s.id === step.id) {
             return {
               ...s,
@@ -214,8 +264,7 @@ export default function RoadmapPage() {
                 </div>
                 <Progress
                   value={progressPercentage}
-                  className="w-32 h-2 bg-emerald-100"
-                  indicatorClassName="bg-emerald-500"
+                  className="w-32 h-2 bg-emerald-100 [&>div]:bg-emerald-500"
                 />
               </div>
             </div>
@@ -271,7 +320,7 @@ export default function RoadmapPage() {
                     description: roadmap.description,
                     nodes: roadmap.steps.map((step) => ({
                       ...step,
-                      id: step.id,
+                      id: step.id.toString(),
                       title: step.title,
                       description: step.description,
                       icon: step.icon || "Code",
@@ -285,13 +334,19 @@ export default function RoadmapPage() {
                   },
                 ],
               }}
-              onNodeClick={handleStepClick}
+              onNodeClick={(node) => handleStepClick({
+                ...node,
+                id: parseInt(node.id),
+                icon_color: node.iconColor,
+                icon_bg: node.iconBg,
+                time_to_complete: node.timeToComplete,
+              })}
             />
           ) : (
             <Card className="border-emerald-100 shadow-md bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
               <div className="p-6">
                 <div className="space-y-8">
-                  {roadmap.steps.map((step, index) => (
+                  {roadmap.steps.map((step: Step, index: number) => (
                     <div
                       key={step.id}
                       className={`
@@ -355,7 +410,7 @@ export default function RoadmapPage() {
                         <div
                           key={i}
                           className={`h-2 w-2 rounded-full mx-0.5 ${
-                            i < selectedStep.difficulty ? "bg-emerald-500" : "bg-gray-200"
+                            i < (selectedStep.difficulty || 0) ? "bg-emerald-500" : "bg-gray-200"
                           }`}
                         />
                       ))}
@@ -368,7 +423,7 @@ export default function RoadmapPage() {
                 <div className="pt-2">
                   <h4 className="text-sm font-medium text-emerald-700 mb-3">Recommended Resources</h4>
                   <ul className="space-y-3">
-                    {selectedStep.resources.map((resource, index) => (
+                    {selectedStep.resources.map((resource: Resource, index: number) => (
                       <li
                         key={index}
                         className="flex items-start gap-3 p-3 rounded-lg bg-emerald-50 hover:bg-emerald-100 transition-colors"

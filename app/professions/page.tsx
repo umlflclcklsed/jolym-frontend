@@ -288,7 +288,7 @@ export default function ProfessionsPage() {
                       </div>
 
                       <div className="flex flex-wrap gap-2 mb-4">
-                        {profession.skills.slice(0, 3).map((skill, i) => (
+                        {profession.skills.slice(0, 3).map((skill: string, i: number) => (
                           <Badge key={i} variant="outline" className="bg-gray-50 dark:bg-gray-800">
                             {skill}
                           </Badge>

@@ -136,11 +136,22 @@ const careerMatches = [
   },
 ]
 
+// Define the career type for better type safety
+interface Career {
+  id: string;
+  title: string;
+  match: number;
+  primaryType: string;
+  secondaryType: string;
+  description: string;
+  skills: string[];
+}
+
 export default function TestResultsPage() {
   const searchParams = useSearchParams()
   const [results, setResults] = useState<Record<string, number>>({})
   const [dominantTypes, setDominantTypes] = useState<string[]>([])
-  const [recommendedCareers, setRecommendedCareers] = useState<any[]>([])
+  const [recommendedCareers, setRecommendedCareers] = useState<Career[]>([])
 
   useEffect(() => {
     // Parse results from URL parameters
@@ -261,10 +272,11 @@ export default function TestResultsPage() {
                           </div>
                           <Progress
                             value={percentage}
-                            className="h-2 mb-4 bg-gray-100 dark:bg-gray-800"
-                            indicatorClassName={
-                              dominantTypes.includes(type) ? "bg-emerald-500" : "bg-gray-400 dark:bg-gray-600"
-                            }
+                            className={`h-2 mb-4 bg-gray-100 dark:bg-gray-800 ${
+                              dominantTypes.includes(type) 
+                                ? "[&>div]:bg-emerald-500" 
+                                : "[&>div]:bg-gray-400 dark:[&>div]:bg-gray-600"
+                            }`}
                           />
                         </motion.div>
                       )
@@ -366,7 +378,7 @@ export default function TestResultsPage() {
                             <div className="md:w-2/4">
                               <p className="text-gray-600 dark:text-gray-400 mb-3">{career.description}</p>
                               <div className="flex flex-wrap gap-2">
-                                {career.skills.map((skill, i) => (
+                                {career.skills.map((skill: string, i: number) => (
                                   <Badge key={i} variant="outline" className="bg-gray-50 dark:bg-gray-800">
                                     {skill}
                                   </Badge>

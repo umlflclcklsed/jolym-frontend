@@ -12,7 +12,19 @@ import { CheckCircle } from "lucide-react"
 import { ArrowLeftIcon, ArrowRightIcon, ReloadIcon } from "@radix-ui/react-icons"
 
 // Sample personality test questions
-const questions = [
+interface Option {
+  value: string;
+  label: string;
+}
+
+interface Question {
+  id: number;
+  text: string;
+  category: string;
+  options: Option[];
+}
+
+const questions: Question[] = [
   {
     id: 1,
     text: "I enjoy solving complex problems and puzzles.",
@@ -291,8 +303,7 @@ export default function PersonalityTestPage() {
             </div>
             <Progress
               value={progress}
-              className="h-2 bg-gray-100 dark:bg-gray-800"
-              indicatorClassName="bg-emerald-500"
+              className="h-2 bg-gray-100 dark:bg-gray-800 [&>div]:bg-emerald-500"
             />
           </div>
 

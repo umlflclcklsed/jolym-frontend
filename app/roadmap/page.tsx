@@ -17,7 +17,7 @@ export default function RoadmapPage() {
   const [selectedNode, setSelectedNode] = useState<RoadmapNode | null>(null)
   const [showDetails, setShowDetails] = useState(true)
 
-  const handleNodeClick = (node: RoadmapNode) => {
+  const handleNodeClick = (node: any) => {
     setSelectedNode(node)
   }
 
@@ -93,7 +93,10 @@ export default function RoadmapPage() {
                     <p className="text-xs text-emerald-600">Completed</p>
                   </div>
                 </div>
-                <Progress value={0} className="w-32 h-2 bg-emerald-100" indicatorClassName="bg-emerald-500" />
+                <Progress 
+                  value={0} 
+                  className="w-32 h-2 bg-emerald-100 [&>div]:bg-emerald-500" 
+                />
               </div>
             </div>
 
@@ -211,7 +214,7 @@ export default function RoadmapPage() {
                         <div
                           key={i}
                           className={`h-2 w-2 rounded-full mx-0.5 ${
-                            i < selectedNode.difficulty ? "bg-emerald-500" : "bg-gray-200"
+                            i < (selectedNode.difficulty ?? 0) ? "bg-emerald-500" : "bg-gray-200"
                           }`}
                         />
                       ))}
@@ -281,7 +284,7 @@ interface RoadmapNode {
   title: string
   description: string
   resources: Resource[]
-  icon: React.ElementType
+  icon: string | React.ElementType // Allow icon to be either a string or component
   iconColor: string
   iconBg: string
   timeToComplete?: string
