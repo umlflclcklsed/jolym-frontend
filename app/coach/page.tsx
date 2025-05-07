@@ -323,4 +323,153 @@ export default function CoachPage() {
                                 {Array.from({ length: 5 }).map((_, i) => (
                                   <svg
                                     key={i}
-                                    className={`h-4 w-4 ${i < Math.floor(coach.rating\
+                                    className={`h-4 w-4 ${
+                                      i < Math.floor(coach.rating)
+                                        ? "text-yellow-400"
+                                        : i < coach.rating
+                                        ? "text-yellow-400/50"
+                                        : "text-gray-300 dark:text-gray-600"
+                                    }`}
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                  </svg>
+                                ))}
+                              </div>
+                              <span className="ml-2 text-gray-600 dark:text-gray-400">
+                                {coach.rating} ({coach.reviews} reviews)
+                              </span>
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-3 mb-4">
+                            <div>
+                              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Specialties</h4>
+                              <div className="flex flex-wrap gap-2 mt-1">
+                                {coach.specialties.map((specialty) => (
+                                  <span
+                                    key={specialty}
+                                    className="px-2 py-1 text-xs bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 rounded-full"
+                                  >
+                                    {specialty}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                            
+                            <div>
+                              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Experience</h4>
+                              <p className="text-gray-600 dark:text-gray-400">{coach.experience}</p>
+                            </div>
+                            
+                            <div>
+                              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Availability</h4>
+                              <p className="text-gray-600 dark:text-gray-400">{coach.availability}</p>
+                            </div>
+                          </div>
+                          
+                          <Button
+                            onClick={() => setSelectedCoach(coach.id)}
+                            className="w-full bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-700"
+                          >
+                            Book a Session
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
+              ) : (
+                <Card className="border-gray-200 dark:border-gray-800">
+                  <CardHeader className="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setSelectedCoach(null)}
+                          className="text-gray-500"
+                        >
+                          ← Back to coaches
+                        </Button>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  
+                  <CardContent className="p-6">
+                    <div className="max-w-md mx-auto">
+                      <div className="text-center mb-6">
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+                          Book a Coaching Session
+                        </h2>
+                        <p className="text-gray-600 dark:text-gray-400">
+                          Schedule a one-on-one session with {coaches.find(c => c.id === selectedCoach)?.name}
+                        </p>
+                      </div>
+                      
+                      <div className="space-y-4">
+                        <div>
+                          <label htmlFor="session-type" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Session Type
+                          </label>
+                          <select
+                            id="session-type"
+                            className="w-full rounded-md border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 px-3 py-2"
+                          >
+                            <option value="initial">Initial Consultation (30 min)</option>
+                            <option value="standard">Standard Session (60 min)</option>
+                            <option value="deep-dive">Deep Dive Session (90 min)</option>
+                          </select>
+                        </div>
+                        
+                        <div>
+                          <label htmlFor="session-date" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Date
+                          </label>
+                          <Input
+                            id="session-date"
+                            type="date"
+                            className="border-gray-200 dark:border-gray-800"
+                          />
+                        </div>
+                        
+                        <div>
+                          <label htmlFor="session-time" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Time
+                          </label>
+                          <Input
+                            id="session-time"
+                            type="time"
+                            className="border-gray-200 dark:border-gray-800"
+                          />
+                        </div>
+                        
+                        <div>
+                          <label htmlFor="session-notes" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Session Notes (Optional)
+                          </label>
+                          <textarea
+                            id="session-notes"
+                            rows={4}
+                            className="w-full rounded-md border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 px-3 py-2"
+                            placeholder="Share any specific topics or questions you'd like to discuss..."
+                          ></textarea>
+                        </div>
+                        
+                        <Button className="w-full bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-700">
+                          Confirm Booking
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
+    </div>
+  )
+}

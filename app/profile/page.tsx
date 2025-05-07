@@ -167,7 +167,6 @@ export default function ProfilePage() {
                 <div className="relative group">
                   <Avatar className="h-24 w-24 border-4 border-emerald-100 dark:border-emerald-800 mt-4 mb-2">
                     <AvatarImage src="/placeholder.svg?height=96&width=96" alt={user?.name || "User"} />
-                    <AvatarFallback className alt={user?.name || "User"} />
                     <AvatarFallback className="bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200">
                       {user?.name?.charAt(0) || <PersonIcon className="h-8 w-8" />}
                     </AvatarFallback>
