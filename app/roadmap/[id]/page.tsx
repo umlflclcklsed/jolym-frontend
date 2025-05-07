@@ -98,6 +98,10 @@ interface RoadmapNode {
   difficulty: number;
   resources: Resource[];
   tips: string;
+  progress?: {
+    completed: boolean;
+    completed_at: string | null;
+  };
 }
 
 export default function RoadmapPage() {
@@ -340,7 +344,11 @@ export default function RoadmapPage() {
                 icon_color: node.iconColor,
                 icon_bg: node.iconBg,
                 time_to_complete: node.timeToComplete,
-              })}
+                progress: node.progress ? {
+                  completed: node.progress.completed,
+                  completed_at: node.progress.completed_at ?? null
+                } : undefined
+              } as Step)}
             />
           ) : (
             <Card className="border-emerald-100 shadow-md bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">

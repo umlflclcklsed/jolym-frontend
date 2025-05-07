@@ -144,8 +144,7 @@ export default function MultiLevelRoadmap({ roadmap, onUpdateProgress }: Roadmap
 
           <Progress
             value={progressPercentage}
-            className="h-2 bg-emerald-100 dark:bg-emerald-900/30"
-            indicatorClassName="bg-emerald-500"
+            className="h-2 bg-emerald-100 dark:bg-emerald-900/30 [&>div]:bg-emerald-500"
           />
         </CardContent>
       </Card>
@@ -176,7 +175,10 @@ export default function MultiLevelRoadmap({ roadmap, onUpdateProgress }: Roadmap
         {roadmap.phases.map((phase, phaseIndex) => (
           <div
             key={phase.id}
-            ref={(el) => (phaseRefs.current[phase.id] = el)}
+            ref={(el) => {
+              phaseRefs.current[phase.id] = el;
+              return undefined;
+            }}
             className={`relative ${activePhase === phase.id ? "" : "opacity-70"}`}
           >
             {/* Phase header */}

@@ -103,8 +103,7 @@ export default function GoalCard({ goal }: GoalCardProps) {
             </div>
             <Progress
               value={goal.progress}
-              className="h-1.5 bg-emerald-100"
-              indicatorClassName={isOverdue ? "bg-red-500" : "bg-emerald-500"}
+              className={`h-1.5 bg-emerald-100 ${isOverdue ? "[&>div]:bg-red-500" : "[&>div]:bg-emerald-500"}`}
             />
           </div>
         )}

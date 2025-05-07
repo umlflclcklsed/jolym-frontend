@@ -8,12 +8,29 @@ import { ZoomIn, ZoomOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
-import type { RoadmapData, RoadmapNode } from "@/lib/groq-service"
+import type { RoadmapData as BaseRoadmapData, RoadmapNode as BaseRoadmapNode } from "@/lib/groq-service"
 import { ChevronRightIcon, ChevronLeftIcon, CheckIcon } from "@radix-ui/react-icons"
 
+// Extend the base types to include progress
+interface RoadmapNode extends BaseRoadmapNode {
+  progress?: {
+    completed: boolean;
+    completed_at?: string | null;
+  };
+}
+
+interface RoadmapData extends BaseRoadmapData {
+  sections: {
+    id: string;
+    title: string;
+    description: string;
+    nodes: RoadmapNode[];
+  }[];
+}
+
 interface MapRoadmapProps {
-  roadmapData: RoadmapData
-  onNodeClick: (node: RoadmapNode) => void
+  roadmapData: RoadmapData;
+  onNodeClick: (node: RoadmapNode) => void;
 }
 
 export default function MapRoadmap({ roadmapData, onNodeClick }: MapRoadmapProps) {

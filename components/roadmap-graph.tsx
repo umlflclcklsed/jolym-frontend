@@ -214,7 +214,7 @@ export default function RoadmapGraph({ onNodeClick }: RoadmapGraphProps) {
   const [edges, , onEdgesChange] = useEdgesState(initialEdges)
 
   const handleNodeClick = useCallback(
-    (_, node) => {
+    (_: React.MouseEvent, node: Node) => {
       onNodeClick(node.data)
     },
     [onNodeClick],
