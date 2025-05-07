@@ -10,12 +10,10 @@ import {
   Clock,
   BookOpen,
   Target,
-  ChevronDown,
   Code,
   Database,
   Server,
   Globe,
-  Terminal,
   Lock,
   Cpu,
   Cloud,
@@ -24,7 +22,6 @@ import {
   BarChartIcon,
   Wrench,
   FileCode,
-  Settings,
   HardDrive,
   Network,
   Workflow,
@@ -46,14 +43,14 @@ import {
   TrendingUp,
   Smartphone,
   Shield,
-  Truck,
-  Loader2,
+  Truck
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { dashboardAPI } from "@/lib/api"
 import { Skeleton } from "@/components/ui/skeleton"
 import MapRoadmap from "@/components/map-roadmap"
+import { ChevronDownIcon, RocketIcon, GearIcon, ReloadIcon } from "@radix-ui/react-icons"
 
 export default function RoadmapPage() {
   const params = useParams()
@@ -230,7 +227,7 @@ export default function RoadmapPage() {
                 onClick={() => setShowDetails(!showDetails)}
               >
                 {showDetails ? "Hide Details" : "Show Details"}
-                <ChevronDown className={`h-4 w-4 transition-transform ${showDetails ? "rotate-180" : ""}`} />
+                <ChevronDownIcon className={`h-4 w-4 transition-transform ${showDetails ? "rotate-180" : ""}`} />
               </Button>
 
               <div className="flex gap-3">
@@ -419,7 +416,7 @@ export default function RoadmapPage() {
               >
                 {updatingProgress ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
                     Updating...
                   </>
                 ) : selectedStep.progress?.completed ? (

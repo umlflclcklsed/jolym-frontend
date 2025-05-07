@@ -9,10 +9,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { AlertCircle, Loader2 } from "lucide-react"
 import { roadmapAPI } from "@/lib/api"
 import { RoadmapGenerationLoading } from "@/components/roadmap-generation-loading"
 import { cn } from "@/lib/utils"
+import { ExclamationTriangleIcon, ReloadIcon } from "@radix-ui/react-icons"
 
 export default function CreateRoadmapPage() {
   const router = useRouter()
@@ -119,7 +119,7 @@ export default function CreateRoadmapPage() {
                     variant="destructive"
                     className="mb-6 border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-900/30"
                   >
-                    <AlertCircle className="h-4 w-4" />
+                    <ExclamationTriangleIcon className="h-4 w-4" />
                     <AlertTitle>Error</AlertTitle>
                     <AlertDescription>{error}</AlertDescription>
                   </Alert>
@@ -173,7 +173,7 @@ export default function CreateRoadmapPage() {
 
                 {searchingForSimilar && (
                   <div className="mt-4 flex items-center text-sm text-gray-500 dark:text-gray-400">
-                    <Loader2 className="h-3 w-3 animate-spin mr-2" />
+                    <ReloadIcon className="h-3 w-3 animate-spin mr-2" />
                     Searching for similar roadmaps...
                   </div>
                 )}
@@ -194,7 +194,7 @@ export default function CreateRoadmapPage() {
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
                       Generating...
                     </>
                   ) : (

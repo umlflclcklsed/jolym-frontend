@@ -10,8 +10,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { AlertCircle, Loader2 } from "lucide-react"
 import { authAPI } from "@/lib/api"
+import { ExclamationTriangleIcon, ReloadIcon } from "@radix-ui/react-icons"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -64,7 +64,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <Alert variant="destructive" className="border-red-200 bg-red-50 text-red-800">
-                <AlertCircle className="h-4 w-4" />
+                <ExclamationTriangleIcon className="h-4 w-4" />
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
@@ -99,7 +99,7 @@ export default function LoginPage() {
             <Button type="submit" className="w-full bg-emerald-700 hover:bg-emerald-800" disabled={isLoading}>
               {isLoading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
                   Logging in...
                 </>
               ) : (

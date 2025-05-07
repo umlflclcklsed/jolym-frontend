@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { MapPin, Menu, X, User } from "lucide-react"
+import { MapPin, Menu } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { ThemeToggle } from "./theme-toggle"
 import { cn } from "@/lib/utils"
+import { Cross2Icon, PersonIcon } from "@radix-ui/react-icons"
 
 export default function Navbar() {
   const router = useRouter()
@@ -147,7 +148,7 @@ export default function Navbar() {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-9 w-9 rounded-full overflow-hidden group">
                   <div className="flex h-full w-full items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 transition-colors group-hover:bg-emerald-200 dark:group-hover:bg-emerald-800">
-                    <User className="h-4 w-4" />
+                    <PersonIcon className="h-4 w-4" />
                   </div>
                   <span className="absolute inset-0 rounded-full bg-emerald-500/20 scale-0 group-hover:scale-100 transition-transform duration-300"></span>
                 </Button>
@@ -187,7 +188,7 @@ export default function Navbar() {
             </>
           )}
           <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {mobileMenuOpen ? <Cross2Icon className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
       </div>

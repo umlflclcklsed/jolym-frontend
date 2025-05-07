@@ -13,8 +13,9 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Separator } from "@/components/ui/separator"
 import { Switch } from "@/components/ui/switch"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { AlertCircle, Loader2, User, Bell, Shield, LogOut } from "lucide-react"
+import { Bell, Shield, LogOut } from "lucide-react"
 import { authAPI } from "@/lib/api"
+import { ExclamationTriangleIcon, ReloadIcon, PersonIcon } from "@radix-ui/react-icons"
 
 export default function ProfilePage() {
   const router = useRouter()
@@ -150,7 +151,7 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-emerald-50 via-white to-white dark:from-gray-900 dark:via-gray-900 dark:to-gray-950">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+        <ReloadIcon className="h-8 w-8 animate-spin text-emerald-500" />
       </div>
     )
   }
@@ -168,7 +169,7 @@ export default function ProfilePage() {
                     <AvatarImage src="/placeholder.svg?height=96&width=96" alt={user?.name || "User"} />
                     <AvatarFallback className alt={user?.name || "User"} />
                     <AvatarFallback className="bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200">
-                      {user?.name?.charAt(0) || <User className="h-8 w-8" />}
+                      {user?.name?.charAt(0) || <PersonIcon className="h-8 w-8" />}
                     </AvatarFallback>
                   </Avatar>
                   <div className="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer">
@@ -186,7 +187,7 @@ export default function ProfilePage() {
             <div className="space-y-2">
               <Button variant="ghost" className="w-full justify-start" asChild>
                 <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400 font-medium">
-                  <User className="h-4 w-4" />
+                  <PersonIcon className="h-4 w-4" />
                   <span>Profile</span>
                 </div>
               </Button>
@@ -223,7 +224,7 @@ export default function ProfilePage() {
                 variant="destructive"
                 className="mb-6 border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-900/30"
               >
-                <AlertCircle className="h-4 w-4" />
+                <ExclamationTriangleIcon className="h-4 w-4" />
                 <AlertTitle>Error</AlertTitle>
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
@@ -298,7 +299,7 @@ export default function ProfilePage() {
                       >
                         {saving ? (
                           <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
                             Saving...
                           </>
                         ) : (
@@ -358,7 +359,7 @@ export default function ProfilePage() {
                       >
                         {saving ? (
                           <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
                             Updating...
                           </>
                         ) : (

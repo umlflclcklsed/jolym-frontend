@@ -10,10 +10,10 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { AlertCircle, Plus, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
+import { ExclamationTriangleIcon, PlusIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons"
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -111,7 +111,7 @@ export default function DashboardPage() {
       <div className="container px-4 py-8 md:px-6">
         {error && (
           <Alert variant="destructive" className="mb-6 border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-900/30">
-            <AlertCircle className="h-4 w-4" />
+            <ExclamationTriangleIcon className="h-4 w-4" />
             <AlertTitle>Error</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
           </Alert>
@@ -146,7 +146,7 @@ export default function DashboardPage() {
 
               <div className="flex items-center gap-4 mt-6">
                 <div className="relative flex-1 max-w-md">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
                     type="text"
                     placeholder="Search roadmaps..."
@@ -157,7 +157,7 @@ export default function DashboardPage() {
                 </div>
                 <Link href="/roadmap/create">
                   <Button className="bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-700 transition-all duration-300">
-                    <Plus className="mr-2 h-4 w-4" />
+                    <PlusIcon className="mr-2 h-4 w-4" />
                     New Roadmap
                   </Button>
                 </Link>
@@ -174,7 +174,7 @@ export default function DashboardPage() {
                   ) : searchQuery ? (
                     <Card className="border-dashed border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/50">
                       <CardContent className="flex flex-col items-center justify-center py-12">
-                        <Search className="h-12 w-12 text-gray-400 mb-4" />
+                        <MagnifyingGlassIcon className="h-12 w-12 text-gray-400 mb-4" />
                         <h3 className="text-xl font-medium text-gray-700 dark:text-gray-300 mb-2">No results found</h3>
                         <p className="text-gray-500 dark:text-gray-400 mb-6 text-center max-w-md">
                           We couldn't find any roadmaps matching "{searchQuery}"
@@ -273,7 +273,7 @@ function EmptyState({
     <Card className="border-dashed border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/50">
       <CardContent className="flex flex-col items-center justify-center py-12">
         <div className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center mb-4">
-          <Plus className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
+          <PlusIcon className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
         </div>
         <h3 className="text-xl font-medium text-gray-700 dark:text-gray-300 mb-2">{title}</h3>
         <p className="text-gray-500 dark:text-gray-400 mb-6 text-center max-w-md">{description}</p>

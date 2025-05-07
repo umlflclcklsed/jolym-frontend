@@ -233,7 +233,7 @@ export default function BackendRoadmap({ roadmapData, onNodeClick }: BackendRoad
         {roadmapData.sections.map((section, index) => (
           <div id={section.id} key={section.id} className="relative">
             <RoadmapSectionComponent section={section} index={index} onNodeClick={onNodeClick} />
-        </div>
+          </div>
         ))}
       </div>
     </div>

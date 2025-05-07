@@ -5,13 +5,11 @@ import type React from "react"
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import {
   BrainCircuit,
   LineChart,
   BookOpen,
-  ArrowRight,
   Code,
   Database,
   Palette,
@@ -19,10 +17,13 @@ import {
   Microscope,
   Heart,
   DollarSign,
-  ChevronDown,
   ArrowUpRight,
+  CheckCircle,
+  Lightbulb,
+  Compass,
 } from "lucide-react"
 import { motion } from "framer-motion"
+import { ArrowRightIcon, ChevronDownIcon } from "@radix-ui/react-icons"
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -152,87 +153,84 @@ export default function Home() {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
               >
-                Describe your dream career. Jolym will generate a personalized roadmap with expert-curated resources.
+                Discover your ideal career path with personalized roadmaps and expert guidance
               </motion.p>
             </motion.div>
 
             <motion.div
-              className="w-full max-w-md space-y-2"
+              className="flex flex-col sm:flex-row gap-4 w-full max-w-md"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
             >
-              <form onSubmit={handleSearch} className="flex w-full max-w-md items-center space-x-2">
-                <Input
-                  type="text"
-                  placeholder="e.g. Become a Data Scientist"
-                  className="border-gray-200 dark:border-gray-800 focus:border-emerald-500 focus:ring-emerald-500 h-12 text-base"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
+              <Link href="/professions" className="flex-1">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    type="submit"
-                    className="bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-700 h-12 px-6 transition-all duration-300"
-                  >
-                    <span>Generate</span>
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                  <Button className="w-full bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-700 h-12 px-6 transition-all duration-300">
+                    <Briefcase className="mr-2 h-5 w-5" />
+                    <span>Explore Professions</span>
                   </Button>
                 </motion.div>
-              </form>
-            </motion.div>
-
-            <motion.div
-              className="flex flex-wrap justify-center gap-2 pt-2"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.8, delay: 1, ease: "easeOut" }}
-            >
-              {["Data Science", "Web Development", "UX Design", "Machine Learning"].map((item, i) => (
-                <motion.div
-                  key={item}
-                  whileHover={{ scale: 1.1, y: -5 }}
-                  whileTap={{ scale: 0.95 }}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1 + i * 0.1, duration: 0.5 }}
-                >
-                  <Link href={`/roadmap/create?q=${encodeURIComponent(item)}`}>
-                    <Button
-                      variant="outline"
-                      className="text-xs border-gray-200 dark:border-gray-800 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 hover:text-emerald-700 dark:hover:text-emerald-400 transition-all duration-200"
-                    >
-                      {item}
-                    </Button>
-                  </Link>
+              </Link>
+              <Link href="/personality-test" className="flex-1">
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button
+                    variant="outline"
+                    className="w-full border-emerald-200 text-emerald-700 hover:bg-emerald-50 dark:border-emerald-800 dark:text-emerald-400 dark:hover:bg-emerald-900/30 h-12 px-6 transition-all duration-300"
+                  >
+                    <Compass className="mr-2 h-5 w-5" />
+                    <span>Take the Test</span>
+                  </Button>
                 </motion.div>
-              ))}
+              </Link>
             </motion.div>
 
             <motion.div
-              className="mt-8 pt-8 w-full max-w-5xl"
+              className="mt-12 pt-4 w-full max-w-5xl"
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 1, delay: 1.2, ease: "easeOut" }}
             >
-              <div className="relative w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden shadow-2xl">
-                <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/10 to-emerald-500/5 dark:from-emerald-900/20 dark:to-emerald-900/10 backdrop-blur-sm"></div>
-                <motion.div
-                  className="absolute inset-0 flex items-center justify-center"
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 1, delay: 1.5, ease: "easeOut" }}
-                >
-                  <div className="w-full max-w-4xl p-4">
-                    <motion.img
-                      src="/placeholder.svg?height=400&width=800"
-                      alt="Roadmap Preview"
-                      className="w-full h-auto rounded-lg shadow-lg"
-                      initial={{ y: 30, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{ duration: 0.8, delay: 1.8, ease: "easeOut" }}
-                    />
-                  </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <motion.div whileHover={{ y: -10 }} transition={{ type: "spring", stiffness: 300 }}>
+                  <Card className="border-emerald-100 dark:border-emerald-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
+                    <CardContent className="p-6 flex flex-col items-center text-center">
+                      <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center mb-4">
+                        <Compass className="h-6 w-6 text-emerald-700 dark:text-emerald-400" />
+                      </div>
+                      <h3 className="text-lg font-medium mb-2">Discover Your Path</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Take our personality test to find careers that match your strengths and interests
+                      </p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+
+                <motion.div whileHover={{ y: -10 }} transition={{ type: "spring", stiffness: 300 }}>
+                  <Card className="border-emerald-100 dark:border-emerald-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
+                    <CardContent className="p-6 flex flex-col items-center text-center">
+                      <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center mb-4">
+                        <LineChart className="h-6 w-6 text-emerald-700 dark:text-emerald-400" />
+                      </div>
+                      <h3 className="text-lg font-medium mb-2">Follow Your Roadmap</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Get a detailed, step-by-step plan to achieve your career goals
+                      </p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+
+                <motion.div whileHover={{ y: -10 }} transition={{ type: "spring", stiffness: 300 }}>
+                  <Card className="border-emerald-100 dark:border-emerald-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
+                    <CardContent className="p-6 flex flex-col items-center text-center">
+                      <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center mb-4">
+                        <BrainCircuit className="h-6 w-6 text-emerald-700 dark:text-emerald-400" />
+                      </div>
+                      <h3 className="text-lg font-medium mb-2">Get Expert Guidance</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Chat with career coaches who can answer questions and provide advice
+                      </p>
+                    </CardContent>
+                  </Card>
                 </motion.div>
               </div>
             </motion.div>
@@ -242,7 +240,7 @@ export default function Home() {
               animate={{ y: [0, 10, 0] }}
               transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
             >
-              <ChevronDown className="h-8 w-8 text-emerald-500 dark:text-emerald-400" />
+              <ChevronDownIcon className="h-8 w-8 text-emerald-500 dark:text-emerald-400" />
             </motion.div>
           </div>
         </div>
@@ -348,7 +346,9 @@ export default function Home() {
                       <ul className="space-y-2 w-full">
                         {category.careers.map((career, j) => (
                           <motion.li key={j} whileHover={{ x: 5 }} transition={{ type: "spring", stiffness: 400 }}>
-                            <Link href={`/roadmap/create?q=${encodeURIComponent(career)}`}>
+                            <Link
+                              href={`/professions/${encodeURIComponent(career.toLowerCase().replace(/\s+/g, "-"))}`}
+                            >
                               <Button
                                 variant="ghost"
                                 className="w-full justify-between text-gray-600 dark:text-gray-400 hover:text-emerald-700 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 p-2 h-auto transition-all duration-200"
@@ -376,11 +376,11 @@ export default function Home() {
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.5 }}
           >
-            <Link href="/roadmap/create">
+            <Link href="/professions">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button className="bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-700 transition-all duration-300">
                   Explore All Career Paths
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <ArrowRightIcon className="ml-2 h-4 w-4" />
                 </Button>
               </motion.div>
             </Link>
@@ -394,113 +394,111 @@ export default function Home() {
           <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
             <div className="space-y-2 max-w-3xl">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-gray-900 dark:text-gray-100">
-                <span className="gradient-text">Features</span>
+                <span className="gradient-text">How It Works</span>
               </h2>
               <p className="mx-auto max-w-[700px] text-gray-600 dark:text-gray-400 md:text-xl">
-                Discover how Jolym can help you plan your career journey
-              </p>
-            </div>
-          </div>
-          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-3 lg:gap-12">
-            <Card className="card-3d border-gray-200 dark:border-gray-800 hover:border-emerald-200 dark:hover:border-emerald-800 bg-white dark:bg-gray-900 transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/50">
-                  <BrainCircuit className="h-6 w-6 text-emerald-700 dark:text-emerald-400" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">AI-Powered</h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Our advanced AI analyzes thousands of career paths to create personalized roadmaps tailored to your
-                  goals and skills.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="card-3d border-gray-200 dark:border-gray-800 hover:border-emerald-200 dark:hover:border-emerald-800 bg-white dark:bg-gray-900 transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/50">
-                  <LineChart className="h-6 w-6 text-emerald-700 dark:text-emerald-400" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">Visual Career Paths</h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  See your entire career journey visualized with clear milestones, helping you understand each step
-                  toward your goal.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="card-3d border-gray-200 dark:border-gray-800 hover:border-emerald-200 dark:hover:border-emerald-800 bg-white dark:bg-gray-900 transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/50">
-                  <BookOpen className="h-6 w-6 text-emerald-700 dark:text-emerald-400" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">Step-by-Step Guidance</h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Get detailed information for each step, including resources, courses, and practical advice to help you
-                  progress.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section ref={testimonialsRef} className="w-full py-20 md:py-28 bg-white dark:bg-gray-950 fade-in-up">
-        <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-            <div className="space-y-2 max-w-3xl">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-gray-900 dark:text-gray-100">
-                <span className="gradient-text">Success Stories</span>
-              </h2>
-              <p className="mx-auto max-w-[700px] text-gray-600 dark:text-gray-400 md:text-xl">
-                See how Jolym has helped people achieve their career goals
+                Our systematic approach helps you find and pursue your ideal career path
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                name: "Sarah Johnson",
-                role: "Data Scientist at Tech Co",
-                quote:
-                  "Jolym's roadmap helped me transition from marketing to data science in just 18 months. The step-by-step guidance was invaluable.",
-                avatar: "/placeholder.svg?height=80&width=80",
-              },
-              {
-                name: "Michael Chen",
-                role: "Full-Stack Developer",
-                quote:
-                  "As a self-taught developer, I was missing key skills. Jolym identified my gaps and helped me become job-ready.",
-                avatar: "/placeholder.svg?height=80&width=80",
-              },
-              {
-                name: "Priya Patel",
-                role: "UX Designer",
-                quote:
-                  "The resources Jolym recommended were spot-on. I went from beginner to professional in less time than I expected.",
-                avatar: "/placeholder.svg?height=80&width=80",
-              },
-            ].map((testimonial, i) => (
-              <Card
-                key={i}
-                className="card-3d border-gray-200 dark:border-gray-800 hover:border-emerald-200 dark:hover:border-emerald-800 bg-white dark:bg-gray-900 transition-all duration-300"
-              >
-                <CardContent className="p-6">
-                  <div className="flex flex-col items-center text-center">
-                    <div className="relative mb-6">
-                      <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-500 to-emerald-700 dark:from-emerald-600 dark:to-emerald-400 rounded-full blur opacity-70 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
-                      <img
-                        src={testimonial.avatar || "/placeholder.svg"}
-                        alt={testimonial.name}
-                        className="relative h-20 w-20 rounded-full border-2 border-white dark:border-gray-800"
-                      />
+          <div className="relative max-w-5xl mx-auto">
+            {/* Connecting line */}
+            <div className="absolute left-1/2 top-8 bottom-8 w-1 bg-emerald-200 dark:bg-emerald-800 -translate-x-1/2 rounded-full hidden md:block"></div>
+
+            <div className="space-y-16 relative">
+              {[
+                {
+                  title: "Discover Your Strengths",
+                  description:
+                    "Take our comprehensive personality test to identify your natural talents, interests, and work preferences.",
+                  icon: Compass,
+                  image: "/placeholder.svg?height=200&width=400",
+                  link: "/personality-test",
+                  linkText: "Take the Test",
+                },
+                {
+                  title: "Explore Matching Careers",
+                  description:
+                    "Review a personalized list of professions that align with your personality type and strengths.",
+                  icon: Briefcase,
+                  image: "/placeholder.svg?height=200&width=400",
+                  link: "/professions",
+                  linkText: "Browse Professions",
+                },
+                {
+                  title: "Follow Your Roadmap",
+                  description:
+                    "Get a detailed, multi-level plan with specific steps, resources, and milestones to achieve your career goals.",
+                  icon: LineChart,
+                  image: "/placeholder.svg?height=200&width=400",
+                  link: "/roadmap/create",
+                  linkText: "Create Roadmap",
+                },
+                {
+                  title: "Track Your Progress",
+                  description:
+                    "Check off completed tasks, monitor your advancement, and celebrate milestones along your journey.",
+                  icon: CheckCircle,
+                  image: "/placeholder.svg?height=200&width=400",
+                  link: "/dashboard",
+                  linkText: "View Dashboard",
+                },
+                {
+                  title: "Get Expert Guidance",
+                  description:
+                    "Chat with career coaches who can answer your questions and provide personalized advice.",
+                  icon: Lightbulb,
+                  image: "/placeholder.svg?height=200&width=400",
+                  link: "/coach",
+                  linkText: "Chat with Coach",
+                },
+              ].map((step, i) => (
+                <motion.div
+                  key={i}
+                  className="relative"
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                >
+                  <div className="flex flex-col md:flex-row items-center gap-8">
+                    <div className={`md:w-1/2 ${i % 2 === 1 ? "md:order-2" : ""}`}>
+                      <div className="relative">
+                        {/* Number indicator */}
+                        <div className="absolute -left-4 -top-4 w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold z-10">
+                          {i + 1}
+                        </div>
+                        <div className="rounded-lg overflow-hidden border border-emerald-100 dark:border-emerald-800">
+                          <img
+                            src={step.image || "/placeholder.svg"}
+                            alt={step.title}
+                            className="w-full h-auto object-cover"
+                          />
+                        </div>
+                      </div>
                     </div>
-                    <p className="text-gray-600 dark:text-gray-400 italic mb-4">"{testimonial.quote}"</p>
-                    <h4 className="font-medium text-gray-900 dark:text-gray-100">{testimonial.name}</h4>
-                    <p className="text-sm text-gray-500 dark:text-gray-500">{testimonial.role}</p>
+
+                    <div className="md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left">
+                      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/50">
+                        <step.icon className="h-6 w-6 text-emerald-700 dark:text-emerald-400" />
+                      </div>
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">{step.title}</h3>
+                      <p className="text-gray-600 dark:text-gray-400 mb-4">{step.description}</p>
+                      <Link href={step.link}>
+                        <Button className="bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-700">
+                          {step.linkText}
+                          <ArrowRightIcon className="ml-2 h-4 w-4" />
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
+
+                  {/* Circle on the timeline */}
+                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-emerald-500 rounded-full hidden md:block"></div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -533,24 +531,24 @@ export default function Home() {
           <div className="relative z-10 flex flex-col items-center justify-center space-y-8 text-center">
             <div className="space-y-4 max-w-3xl">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-white">
-                Ready to Start Your Journey?
+                Ready to Discover Your Ideal Career Path?
               </h2>
               <p className="mx-auto max-w-[700px] text-emerald-100 md:text-xl">
-                Create your account today and get your personalized career roadmap.
+                Take our personality test today and get a personalized roadmap to your dream career
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/register">
+              <Link href="/personality-test">
                 <Button className="bg-white text-emerald-700 hover:bg-gray-100 h-12 px-8 text-base transition-all duration-300">
-                  Get Started
+                  Take the Test
                 </Button>
               </Link>
-              <Link href="/login">
+              <Link href="/professions">
                 <Button
                   variant="outline"
                   className="text-white border-white hover:bg-emerald-600 h-12 px-8 text-base transition-all duration-300"
                 >
-                  Login
+                  Browse Professions
                 </Button>
               </Link>
             </div>

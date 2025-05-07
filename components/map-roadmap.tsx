@@ -4,11 +4,12 @@ import type React from "react"
 
 import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { ChevronRight, ChevronLeft, ZoomIn, ZoomOut, Check } from "lucide-react"
+import { ZoomIn, ZoomOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import type { RoadmapData, RoadmapNode } from "@/lib/groq-service"
+import { ChevronRightIcon, ChevronLeftIcon, CheckIcon } from "@radix-ui/react-icons"
 
 interface MapRoadmapProps {
   roadmapData: RoadmapData
@@ -128,7 +129,7 @@ export default function MapRoadmap({ roadmapData, onNodeClick }: MapRoadmapProps
           disabled={activeSection === 0}
           className="bg-white dark:bg-gray-800"
         >
-          <ChevronLeft className="h-4 w-4" />
+          <ChevronLeftIcon className="h-4 w-4" />
         </Button>
         <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-100 px-3 py-1">
           {activeSection + 1} / {roadmapData.sections.length}
@@ -140,7 +141,7 @@ export default function MapRoadmap({ roadmapData, onNodeClick }: MapRoadmapProps
           disabled={activeSection === roadmapData.sections.length - 1}
           className="bg-white dark:bg-gray-800"
         >
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRightIcon className="h-4 w-4" />
         </Button>
       </div>
 
@@ -240,7 +241,7 @@ export default function MapRoadmap({ roadmapData, onNodeClick }: MapRoadmapProps
                           <div className="absolute -top-3 -right-3 z-10">
                             {isCompleted && (
                               <div className="bg-emerald-500 text-white rounded-full p-1">
-                                <Check className="h-4 w-4" />
+                                <CheckIcon className="h-4 w-4" />
                               </div>
                             )}
                           </div>
