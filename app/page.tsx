@@ -234,14 +234,6 @@ export default function Home() {
                 </motion.div>
               </div>
             </motion.div>
-
-            <motion.div
-              className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-            >
-              <ChevronDownIcon className="h-8 w-8 text-emerald-500 dark:text-emerald-400" />
-            </motion.div>
           </div>
         </div>
       </section>
@@ -413,7 +405,7 @@ export default function Home() {
                   description:
                     "Take our comprehensive personality test to identify your natural talents, interests, and work preferences.",
                   icon: Compass,
-                  image: "/placeholder.svg?height=200&width=400",
+                  image: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                   link: "/personality-test",
                   linkText: "Take the Test",
                 },
@@ -422,7 +414,7 @@ export default function Home() {
                   description:
                     "Review a personalized list of professions that align with your personality type and strengths.",
                   icon: Briefcase,
-                  image: "/placeholder.svg?height=200&width=400",
+                  image: "https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1738&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                   link: "/professions",
                   linkText: "Browse Professions",
                 },
@@ -431,7 +423,7 @@ export default function Home() {
                   description:
                     "Get a detailed, multi-level plan with specific steps, resources, and milestones to achieve your career goals.",
                   icon: LineChart,
-                  image: "/placeholder.svg?height=200&width=400",
+                  image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1742&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                   link: "/roadmap/create",
                   linkText: "Create Roadmap",
                 },
@@ -440,7 +432,7 @@ export default function Home() {
                   description:
                     "Check off completed tasks, monitor your advancement, and celebrate milestones along your journey.",
                   icon: CheckCircle,
-                  image: "/placeholder.svg?height=200&width=400",
+                  image: "https://images.unsplash.com/photo-1598257006460-4cd5d043cf49?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                   link: "/dashboard",
                   linkText: "View Dashboard",
                 },
@@ -449,7 +441,7 @@ export default function Home() {
                   description:
                     "Chat with career coaches who can answer your questions and provide personalized advice.",
                   icon: Lightbulb,
-                  image: "/placeholder.svg?height=200&width=400",
+                  image: "https://images.unsplash.com/photo-1507494924047-60b8ee826ca9?q=80&w=1973&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                   link: "/coach",
                   linkText: "Chat with Coach",
                 },
