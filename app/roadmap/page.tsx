@@ -1,126 +1,165 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Download, Share2, Clock, BarChart, BookOpen, Target } from "lucide-react"
-import BackendRoadmap from "@/components/backend-roadmap"
+import { Download, Share2, Clock, BarChart, BookOpen, Target, ChevronDown } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { ChevronDownIcon } from "@radix-ui/react-icons"
+import MultiLevelRoadmap from "@/components/multi-level-roadmap"
+import { mockRoadmapData } from "@/data/mock-roadmap"
 
 export default function RoadmapPage() {
-  const [career] = useState("Backend Developer")
-  const [selectedNode, setSelectedNode] = useState<RoadmapNode | null>(null)
   const [showDetails, setShowDetails] = useState(true)
+  const [roadmapData, setRoadmapData] = useState(mockRoadmapData)
 
-  const handleNodeClick = (node: any) => {
-    setSelectedNode(node)
+  // Function to update task completion status
+  const handleUpdateProgress = (phaseId: string, milestoneId: string, taskId: string, completed: boolean) => {
+    setRoadmapData((prevData) => {
+      const newData = { ...prevData }
+
+      // Find and update the specific task
+      const phase = newData.phases.find((p) => p.id === phaseId)
+      if (phase) {
+        const milestone = phase.milestones.find((m) => m.id === milestoneId)
+        if (milestone) {
+          const task = milestone.tasks.find((t) => t.id === taskId)
+          if (task) {
+            task.completed = completed
+          }
+
+          // Update milestone completion status
+          milestone.completed = milestone.tasks.every((t) => t.completed)
+        }
+
+        // Update phase completion status
+        phase.completed = phase.milestones.every((m) => m.completed)
+      }
+
+      return newData
+    })
   }
 
-  const handleCloseModal = () => {
-    setSelectedNode(null)
-  }
+  // Calculate overall progress
+  const totalTasks = roadmapData.phases.reduce(
+    (total, phase) =>
+      total + phase.milestones.reduce((phaseTotal, milestone) => phaseTotal + milestone.tasks.length, 0),
+    0,
+  )
+
+  const completedTasks = roadmapData.phases.reduce(
+    (total, phase) =>
+      total +
+      phase.milestones.reduce(
+        (phaseTotal, milestone) => phaseTotal + milestone.tasks.filter((task) => task.completed).length,
+        0,
+      ),
+    0,
+  )
+
+  const progressPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-white">
+    <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-white dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <div className="container px-4 py-8 md:px-6 md:py-12">
         {/* Career Goal Card */}
-        <Card className="border-emerald-100 shadow-md bg-white mb-8 overflow-hidden">
+        <Card className="border-emerald-100 dark:border-emerald-800 shadow-md bg-white dark:bg-gray-800 mb-8 overflow-hidden">
           <div className="p-6 md:p-8">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
-                  <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200 px-3 py-1 text-xs">
+                  <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900/50 dark:text-emerald-200 dark:border-emerald-800 px-3 py-1 text-xs">
                     Career Path
                   </Badge>
-                  <Badge className="bg-blue-100 text-blue-800 border-blue-200 px-3 py-1 text-xs">Technology</Badge>
+                  <Badge className="bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/50 dark:text-blue-200 dark:border-blue-800 px-3 py-1 text-xs">
+                    Technology
+                  </Badge>
                 </div>
 
-                <h1 className="text-3xl font-bold text-emerald-900">{career}</h1>
+                <h1 className="text-3xl font-bold text-emerald-900 dark:text-emerald-100">{roadmapData.title}</h1>
 
-                <p className="text-gray-600 max-w-2xl">
-                  A backend developer creates and maintains the server-side of web applications, focusing on databases,
-                  server logic, APIs, and application architecture to ensure smooth functionality and performance.
-                </p>
+                <p className="text-gray-600 dark:text-gray-300 max-w-2xl">{roadmapData.description}</p>
 
                 <div className="flex flex-wrap gap-6 pt-2">
                   <div className="flex items-center gap-2">
-                    <Clock className="h-5 w-5 text-emerald-700" />
+                    <Clock className="h-5 w-5 text-emerald-700 dark:text-emerald-400" />
                     <div>
-                      <p className="text-sm text-gray-500">Estimated Time</p>
-                      <p className="font-medium text-emerald-900">600-800 hours</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Estimated Time</p>
+                      <p className="font-medium text-emerald-900 dark:text-emerald-100">{roadmapData.estimatedTime}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <BarChart className="h-5 w-5 text-emerald-700" />
+                    <BarChart className="h-5 w-5 text-emerald-700 dark:text-emerald-400" />
                     <div>
-                      <p className="text-sm text-gray-500">Difficulty</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Difficulty</p>
                       <div className="flex items-center gap-1">
                         {Array.from({ length: 5 }).map((_, i) => (
-                          <div key={i} className={`h-2 w-2 rounded-full ${i < 4 ? "bg-emerald-500" : "bg-gray-200"}`} />
+                          <div
+                            key={i}
+                            className={`h-2 w-2 rounded-full ${
+                              i < roadmapData.difficulty ? "bg-emerald-500" : "bg-gray-200 dark:bg-gray-600"
+                            }`}
+                          />
                         ))}
                       </div>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <BookOpen className="h-5 w-5 text-emerald-700" />
+                    <BookOpen className="h-5 w-5 text-emerald-700 dark:text-emerald-400" />
                     <div>
-                      <p className="text-sm text-gray-500">Prerequisites</p>
-                      <p className="font-medium text-emerald-900">Basic programming knowledge</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Prerequisites</p>
+                      <p className="font-medium text-emerald-900 dark:text-emerald-100">Basic programming knowledge</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <Target className="h-5 w-5 text-emerald-700" />
+                    <Target className="h-5 w-5 text-emerald-700 dark:text-emerald-400" />
                     <div>
-                      <p className="text-sm text-gray-500">Career Level</p>
-                      <p className="font-medium text-emerald-900">Entry to Senior</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Career Level</p>
+                      <p className="font-medium text-emerald-900 dark:text-emerald-100">Entry to Senior</p>
                     </div>
                   </div>
                 </div>
               </div>
 
               <div className="flex flex-col items-center gap-3">
-                <div className="w-32 h-32 rounded-full bg-emerald-50 border-4 border-emerald-100 flex items-center justify-center">
+                <div className="w-32 h-32 rounded-full bg-emerald-50 dark:bg-emerald-900/30 border-4 border-emerald-100 dark:border-emerald-800 flex items-center justify-center">
                   <div className="text-center">
-                    <p className="text-3xl font-bold text-emerald-700">0%</p>
-                    <p className="text-xs text-emerald-600">Completed</p>
+                    <p className="text-3xl font-bold text-emerald-700 dark:text-emerald-400">{progressPercentage}%</p>
+                    <p className="text-xs text-emerald-600 dark:text-emerald-300">Completed</p>
                   </div>
                 </div>
-                <Progress 
-                  value={0} 
-                  className="w-32 h-2 bg-emerald-100 [&>div]:bg-emerald-500" 
+                <Progress
+                  value={progressPercentage}
+                  className="w-32 h-2 bg-emerald-100 dark:bg-emerald-900/50"
+                  indicatorClassName="bg-emerald-500 dark:bg-emerald-400"
                 />
               </div>
             </div>
 
-            <div className="flex justify-between items-center mt-8 pt-6 border-t border-gray-100">
+            <div className="flex justify-between items-center mt-8 pt-6 border-t border-gray-100 dark:border-gray-700">
               <Button
                 variant="ghost"
-                className="text-emerald-700 hover:text-emerald-800 hover:bg-emerald-50 gap-2"
+                className="text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 gap-2"
                 onClick={() => setShowDetails(!showDetails)}
               >
                 {showDetails ? "Hide Details" : "Show Details"}
-                <ChevronDownIcon className={`h-4 w-4 transition-transform ${showDetails ? "rotate-180" : ""}`} />
+                <ChevronDown className={`h-4 w-4 transition-transform ${showDetails ? "rotate-180" : ""}`} />
               </Button>
 
               <div className="flex gap-3">
                 <Button
                   variant="outline"
-                  className="gap-2 border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700"
+                  className="gap-2 border-emerald-200 dark:border-emerald-800 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-900/50 dark:hover:text-emerald-300"
                 >
                   <Download className="h-4 w-4" />
                   <span>Download</span>
                 </Button>
                 <Button
                   variant="outline"
-                  className="gap-2 border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700"
+                  className="gap-2 border-emerald-200 dark:border-emerald-800 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-emerald-900/50 dark:hover:text-emerald-300"
                 >
                   <Share2 className="h-4 w-4" />
                   <span>Share</span>
@@ -129,9 +168,9 @@ export default function RoadmapPage() {
             </div>
 
             {showDetails && (
-              <div className="mt-6 pt-4 border-t border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-700 grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <h3 className="font-medium text-emerald-800 mb-3">What You'll Learn</h3>
+                  <h3 className="font-medium text-emerald-800 dark:text-emerald-300 mb-3">What You'll Learn</h3>
                   <ul className="space-y-2">
                     {[
                       "Server-side programming languages and frameworks",
@@ -142,17 +181,17 @@ export default function RoadmapPage() {
                       "Performance optimization and scaling strategies",
                     ].map((item, i) => (
                       <li key={i} className="flex items-start gap-2">
-                        <div className="rounded-full bg-emerald-100 p-1 mt-1">
-                          <div className="h-1.5 w-1.5 rounded-full bg-emerald-700" />
+                        <div className="rounded-full bg-emerald-100 dark:bg-emerald-900/50 p-1 mt-1">
+                          <div className="h-1.5 w-1.5 rounded-full bg-emerald-700 dark:bg-emerald-400" />
                         </div>
-                        <span className="text-gray-600">{item}</span>
+                        <span className="text-gray-600 dark:text-gray-300">{item}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
                 <div>
-                  <h3 className="font-medium text-emerald-800 mb-3">Career Opportunities</h3>
+                  <h3 className="font-medium text-emerald-800 dark:text-emerald-300 mb-3">Career Opportunities</h3>
                   <ul className="space-y-2">
                     {[
                       "Backend Developer ($70,000 - $120,000)",
@@ -163,10 +202,10 @@ export default function RoadmapPage() {
                       "Software Architect ($120,000 - $200,000)",
                     ].map((item, i) => (
                       <li key={i} className="flex items-start gap-2">
-                        <div className="rounded-full bg-emerald-100 p-1 mt-1">
-                          <div className="h-1.5 w-1.5 rounded-full bg-emerald-700" />
+                        <div className="rounded-full bg-emerald-100 dark:bg-emerald-900/50 p-1 mt-1">
+                          <div className="h-1.5 w-1.5 rounded-full bg-emerald-700 dark:bg-emerald-400" />
                         </div>
-                        <span className="text-gray-600">{item}</span>
+                        <span className="text-gray-600 dark:text-gray-300">{item}</span>
                       </li>
                     ))}
                   </ul>
@@ -176,118 +215,13 @@ export default function RoadmapPage() {
           </div>
         </Card>
 
-        {/* Roadmap */}
-        <Card className="border-emerald-100 shadow-md bg-white/80 backdrop-blur-sm">
+        {/* Multi-level Roadmap */}
+        <Card className="border-emerald-100 dark:border-emerald-800 shadow-md bg-white dark:bg-gray-800 backdrop-blur-sm">
           <div className="p-6">
-            <BackendRoadmap onNodeClick={handleNodeClick} />
+            <MultiLevelRoadmap roadmap={roadmapData} onUpdateProgress={handleUpdateProgress} />
           </div>
         </Card>
       </div>
-
-      {selectedNode && (
-        <Dialog open={!!selectedNode} onOpenChange={handleCloseModal}>
-          <DialogContent className="sm:max-w-[550px] border-emerald-100">
-            <DialogHeader>
-              <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-lg ${selectedNode.iconBg}`}>
-                  <selectedNode.icon className={`h-5 w-5 ${selectedNode.iconColor}`} />
-                </div>
-                <DialogTitle className="text-xl text-emerald-800">{selectedNode.title}</DialogTitle>
-              </div>
-              <DialogDescription className="text-gray-600 mt-2">{selectedNode.description}</DialogDescription>
-            </DialogHeader>
-
-            <div className="space-y-4 py-2">
-              <div className="flex flex-wrap gap-x-6 gap-y-2">
-                {selectedNode.timeToComplete && (
-                  <div className="flex items-center gap-2 text-sm text-gray-500">
-                    <Clock className="h-4 w-4 text-emerald-600" />
-                    <span>{selectedNode.timeToComplete}</span>
-                  </div>
-                )}
-
-                {selectedNode.difficulty && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <BarChart className="h-4 w-4 text-emerald-600" />
-                    <div className="flex items-center">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <div
-                          key={i}
-                          className={`h-2 w-2 rounded-full mx-0.5 ${
-                            i < (selectedNode.difficulty ?? 0) ? "bg-emerald-500" : "bg-gray-200"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="pt-2">
-                <h4 className="text-sm font-medium text-emerald-700 mb-3">Recommended Resources</h4>
-                <ul className="space-y-3">
-                  {selectedNode.resources.map((resource, index) => (
-                    <li
-                      key={index}
-                      className="flex items-start gap-3 p-3 rounded-lg bg-emerald-50 hover:bg-emerald-100 transition-colors"
-                    >
-                      <div className="rounded-full bg-white p-1.5 mt-0.5 border border-emerald-200">
-                        <div className="h-2 w-2 rounded-full bg-emerald-700" />
-                      </div>
-                      <div>
-                        <a
-                          href={resource.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-emerald-700 hover:underline font-medium"
-                        >
-                          {resource.title}
-                        </a>
-                        <p className="text-sm text-gray-600">{resource.source}</p>
-                        {resource.description && <p className="text-xs text-gray-500 mt-1">{resource.description}</p>}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {selectedNode.tips && (
-                <div className="pt-2">
-                  <h4 className="text-sm font-medium text-emerald-700 mb-2">Pro Tips</h4>
-                  <p className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg border border-blue-100">
-                    {selectedNode.tips}
-                  </p>
-                </div>
-              )}
-            </div>
-
-            <div className="flex justify-end">
-              <Button className="bg-emerald-700 hover:bg-emerald-800">Mark as Complete</Button>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
     </div>
   )
-}
-
-// Types
-interface Resource {
-  title: string
-  url: string
-  source: string
-  description?: string
-}
-
-interface RoadmapNode {
-  id: string
-  title: string
-  description: string
-  resources: Resource[]
-  icon: string | React.ElementType // Allow icon to be either a string or component
-  iconColor: string
-  iconBg: string
-  timeToComplete?: string
-  difficulty?: number
-  tips?: string
 }
