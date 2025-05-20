@@ -40,8 +40,27 @@ interface Phase {
   id: string
   title: string
   description: string
-  milestones: Milestone[]
   completed: boolean
+  milestones: {
+    id: string
+    title: string
+    description: string
+    completed: boolean
+    tasks: {
+      id: string
+      title: string
+      description: string
+      completed: boolean
+      resources: {
+        id: string
+        title: string
+        url: string
+        type: string
+        duration: string
+        free: boolean
+      }[]
+    }[]
+  }[]
 }
 
 interface RoadmapProps {
