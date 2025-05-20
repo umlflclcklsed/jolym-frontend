@@ -55,7 +55,7 @@ interface Phase {
         id: string
         title: string
         url: string
-        type: string
+        type: "article" | "video" | "course" | "book" | "tool"
         duration: string
         free: boolean
       }[]

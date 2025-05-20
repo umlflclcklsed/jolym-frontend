@@ -1,4 +1,48 @@
-export const mockRoadmapData = {
+type ResourceType = "article" | "video" | "course" | "book" | "tool"
+
+interface Resource {
+  id: string
+  title: string
+  url: string
+  type: ResourceType
+  duration: string
+  free: boolean
+}
+
+interface Task {
+  id: string
+  title: string
+  description: string
+  completed: boolean
+  resources: Resource[]
+}
+
+interface Milestone {
+  id: string
+  title: string
+  description: string
+  completed: boolean
+  tasks: Task[]
+}
+
+interface Phase {
+  id: string
+  title: string
+  description: string
+  completed: boolean
+  milestones: Milestone[]
+}
+
+interface RoadmapData {
+  id: string
+  title: string
+  description: string
+  estimatedTime: string
+  difficulty: number
+  phases: Phase[]
+}
+
+export const mockRoadmapData: RoadmapData = {
     id: "backend-developer",
     title: "Backend Developer",
     description: "A comprehensive roadmap to become a professional backend developer",
