@@ -20,7 +20,7 @@ const professionCategories = [
     bgColor: "bg-blue-100 dark:bg-blue-900/30",
     professions: [
       {
-        id: "software-engineerr",
+        id: "software-engineer",
         title: "Software Engineer",
         description: "Design, develop, and maintain software systems and applications",
         salary: "$70,000 - $150,000",
