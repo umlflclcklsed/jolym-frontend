@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -130,6 +130,7 @@ const professionCategories = [
 ]
 
 export default function ProfessionsPage() {
+  const router = useRouter()
   const [searchQuery, setSearchQuery] = useState("")
   const [activeCategory, setActiveCategory] = useState("all")
   const [filteredProfessions, setFilteredProfessions] = useState<any[]>([])
@@ -254,8 +255,8 @@ export default function ProfessionsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <Link href={`/professions/${profession.id}`}>
-                  <Card className="h-full border-gray-200 dark:border-gray-800 hover:border-emerald-200 dark:hover:border-emerald-800 transition-all duration-300 hover:shadow-md">
+                <div onClick={() => router.push(`/professions/${profession.id}`)}>
+                  <Card className="h-full border-gray-200 dark:border-gray-800 hover:border-emerald-200 dark:hover:border-emerald-800 transition-all duration-300 hover:shadow-md cursor-pointer">
                     <CardContent className="p-6">
                       <div className="flex items-start justify-between mb-4">
                         <div className={`p-2 rounded-lg ${profession.categoryBgColor}`}>
@@ -310,7 +311,7 @@ export default function ProfessionsPage() {
                       </div>
                     </CardContent>
                   </Card>
-                </Link>
+                </div>
               </motion.div>
             ))}
           </div>

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
-import Link from "next/link"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -164,15 +163,28 @@ export default function ProfessionDetailPage() {
   const router = useRouter()
   const [profession, setProfession] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [categoryIcon, setCategoryIcon] = useState<any>(null)
 
   useEffect(() => {
     if (params.id) {
       const professionId = Array.isArray(params.id) ? params.id[0] : params.id
-      const foundProfession = findProfessionById(professionId)
       
-      if (foundProfession) {
-        setProfession(foundProfession)
+      // Find the profession
+      for (const category of professionCategories) {
+        const foundProfession = category.professions.find(p => p.id === professionId)
+        if (foundProfession) {
+          setProfession({
+            ...foundProfession,
+            category: category.name,
+            categoryId: category.id,
+            categoryColor: category.color,
+            categoryBgColor: category.bgColor
+          })
+          setCategoryIcon(category.icon)
+          break
+        }
       }
+      
       setLoading(false)
     }
   }, [params.id])
@@ -192,17 +204,15 @@ export default function ProfessionDetailPage() {
         <p className="text-gray-600 dark:text-gray-400 mb-6">
           The profession you're looking for doesn't exist or has been removed.
         </p>
-        <Button asChild>
-          <Link href="/professions">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to All Professions
-          </Link>
+        <Button onClick={() => router.push('/professions')}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to All Professions
         </Button>
       </div>
     )
   }
 
-  const CategoryIcon = profession.categoryIcon
+  const CategoryIcon = categoryIcon
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-white dark:from-gray-900 dark:via-gray-900 dark:to-gray-950">
@@ -210,12 +220,10 @@ export default function ProfessionDetailPage() {
         <Button
           variant="ghost"
           className="mb-8 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
-          asChild
+          onClick={() => router.push('/professions')}
         >
-          <Link href="/professions">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to All Professions
-          </Link>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to All Professions
         </Button>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -371,7 +379,10 @@ export default function ProfessionDetailPage() {
                     achieve your goals.
                   </p>
 
-                  <Button className="w-full mb-4 bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-700">
+                  <Button 
+                    className="w-full mb-4 bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-700"
+                    onClick={() => {}}
+                  >
                     <BookOpen className="mr-2 h-5 w-5" />
                     Generate Career Roadmap
                   </Button>
@@ -379,6 +390,7 @@ export default function ProfessionDetailPage() {
                   <Button
                     variant="outline"
                     className="w-full border-emerald-200 text-emerald-700 hover:bg-emerald-50 dark:border-emerald-800 dark:text-emerald-400 dark:hover:bg-emerald-900/30"
+                    onClick={() => router.push('/professions')}
                   >
                     <Briefcase className="mr-2 h-5 w-5" />
                     View Similar Careers
@@ -391,40 +403,40 @@ export default function ProfessionDetailPage() {
                   <h2 className="text-xl font-semibold mb-4">Related Resources</h2>
                   <ul className="space-y-4">
                     <li>
-                      <Link
-                        href="#"
+                      <button
+                        onClick={() => {}}
                         className="flex items-center text-emerald-700 hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-300"
                       >
                         <ArrowRightIcon className="mr-2 h-4 w-4" />
                         <span>Top Universities for {profession.title}s</span>
-                      </Link>
+                      </button>
                     </li>
                     <li>
-                      <Link
-                        href="#"
+                      <button
+                        onClick={() => {}}
                         className="flex items-center text-emerald-700 hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-300"
                       >
                         <ArrowRightIcon className="mr-2 h-4 w-4" />
                         <span>Industry Certifications Guide</span>
-                      </Link>
+                      </button>
                     </li>
                     <li>
-                      <Link
-                        href="#"
+                      <button
+                        onClick={() => {}}
                         className="flex items-center text-emerald-700 hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-300"
                       >
                         <ArrowRightIcon className="mr-2 h-4 w-4" />
                         <span>Networking Tips for {profession.category} Professionals</span>
-                      </Link>
+                      </button>
                     </li>
                     <li>
-                      <Link
-                        href="#"
+                      <button
+                        onClick={() => {}}
                         className="flex items-center text-emerald-700 hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-300"
                       >
                         <ArrowRightIcon className="mr-2 h-4 w-4" />
                         <span>Interview Preparation for {profession.title}s</span>
-                      </Link>
+                      </button>
                     </li>
                   </ul>
                 </CardContent>
