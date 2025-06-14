@@ -29,9 +29,19 @@ export default function ForgotPasswordPage() {
         throw new Error("Please enter your email address")
       }
 
-      // Since we don't have a backend endpoint for password reset yet,
-      // we'll just simulate a successful submission
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      // Send request to backend
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/auth/forgot-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || "Failed to process your request. Please try again.");
+      }
       
       // Set submitted state to show success message
       setIsSubmitted(true)
