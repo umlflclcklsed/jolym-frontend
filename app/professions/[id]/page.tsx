@@ -227,7 +227,7 @@ export default function ProfessionDetailPage() {
             >
               <div className="flex items-center mb-6">
                 <div className={`p-3 rounded-lg mr-4 ${profession.categoryBgColor}`}>
-                  <CategoryIcon className={`h-6 w-6 ${profession.categoryColor}`} />
+                  {CategoryIcon && <CategoryIcon className={`h-6 w-6 ${profession.categoryColor}`} />}
                 </div>
                 <div>
                   <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{profession.title}</h1>

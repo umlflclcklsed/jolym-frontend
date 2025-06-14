@@ -163,25 +163,26 @@ export default function Home() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
             >
-              <Link href="/professions" className="flex-1">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button className="w-full bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-700 h-12 px-6 transition-all duration-300">
+              <motion.div className="flex-1" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button asChild className="w-full bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-700 h-12 px-6 transition-all duration-300">
+                  <Link href="/professions">
                     <Briefcase className="mr-2 h-5 w-5" />
                     <span>Explore Professions</span>
-                  </Button>
-                </motion.div>
-              </Link>
-              <Link href="/personality-test" className="flex-1">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    variant="outline"
-                    className="w-full border-emerald-200 text-emerald-700 hover:bg-emerald-50 dark:border-emerald-800 dark:text-emerald-400 dark:hover:bg-emerald-900/30 h-12 px-6 transition-all duration-300"
-                  >
+                  </Link>
+                </Button>
+              </motion.div>
+              <motion.div className="flex-1" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="w-full border-emerald-200 text-emerald-700 hover:bg-emerald-50 dark:border-emerald-800 dark:text-emerald-400 dark:hover:bg-emerald-900/30 h-12 px-6 transition-all duration-300"
+                >
+                  <Link href="/personality-test">
                     <Compass className="mr-2 h-5 w-5" />
                     <span>Take the Test</span>
-                  </Button>
-                </motion.div>
-              </Link>
+                  </Link>
+                </Button>
+              </motion.div>
             </motion.div>
 
             <motion.div

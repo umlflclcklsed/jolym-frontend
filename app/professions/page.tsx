@@ -143,6 +143,7 @@ export default function ProfessionsPage() {
       categoryId: category.id,
       categoryColor: category.color,
       categoryBgColor: category.bgColor,
+      categoryIcon: category.icon,
     })),
   )
 
@@ -258,7 +259,7 @@ export default function ProfessionsPage() {
                     <CardContent className="p-6">
                       <div className="flex items-start justify-between mb-4">
                         <div className={`p-2 rounded-lg ${profession.categoryBgColor}`}>
-                          <profession.category.icon className={`h-5 w-5 ${profession.categoryColor}`} />
+                          {profession.categoryIcon && <profession.categoryIcon className={`h-5 w-5 ${profession.categoryColor}`} />}
                         </div>
                         {profession.trending && (
                           <Badge className="bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800">
