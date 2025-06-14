@@ -9,7 +9,6 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { ExclamationTriangleIcon, ReloadIcon, CheckCircledIcon } from "@radix-ui/react-icons"
-import axios from "@/lib/axios"
 
 export default function ResetPasswordPage() {
   const router = useRouter()
@@ -53,10 +52,18 @@ export default function ResetPasswordPage() {
       }
 
       // Send request to reset password
-      const response = await axios.post("/auth/reset-password", {
-        token,
-        new_password: password
-      })
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/auth/reset-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token, new_password: password }),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || "Failed to reset password. Please try again.");
+      }
 
       // Set submitted state to show success message
       setIsSubmitted(true)
